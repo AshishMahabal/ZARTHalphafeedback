@@ -1,0 +1,23 @@
+name: Issue Notifications
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email notification
+        uses: sendgrid/email-action@1.1.0
+        with:
+          api_key: ${{ secrets.SENDGRID_API_KEY }}
+          from_email: sgga@sgga.org
+          to_email: zarth-ztf@caltech.edu
+          subject: New issue or comment detected
+          text: |
+            New issue or comment detected:
+            Repository: ${{ github.repository }}
+            Issue: ${{ github.event.issue.html_url }}
+            Comment: ${{ github.event.comment.html_url }}
